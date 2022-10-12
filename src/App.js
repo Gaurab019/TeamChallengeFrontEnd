@@ -1,4 +1,5 @@
 // import logo from "./logo.svg";
+require("dotenv").config();
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import "./App.css";
@@ -30,17 +31,11 @@ function App() {
   const clickbutton = () => {
     files.forEach((file) => {
       (async () => {
-        let response = await uploadImage(
-          "http://localhost:3001/uploadImage",
-          file
-        );
+        let response = await uploadImage(process.env.SERVERURI_UPLOAD, file);
         setuploadedfiles((current) => [...current, response.data]);
 
         if (response.data.uploadstatus === "File Upload Complete") {
-          response = await OCROperation(
-            "http://localhost:3001/readImage",
-            file
-          );
+          response = await OCROperation(process.env.SERVERURI_READIMAGE, file);
           setuploadedfiles((current) => {
             return current.map((element) => {
               element.ocrstatus = response.data.ocrstatus;
